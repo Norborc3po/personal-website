@@ -1,0 +1,23 @@
+{
+  "name": "personal-website",
+  "version": "1.0.0",
+  "description": "My personal website",
+  "scripts": {
+    "deploy": "aws s3 sync . s3://hugocardenas.me --exclude '*' --include 'index.html' --include 'css/*' --include 'js/*' --delete",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hugo-cardenas/personal-website.git"
+  },
+  "keywords": [
+    "personal",
+    "website"
+  ],
+  "author": "Hugo Cardenas",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hugo-cardenas/personal-website/issues"
+  },
+  "homepage": "https://github.com/hugo-cardenas/personal-website#readme"
+}
