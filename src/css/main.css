@@ -1,0 +1,72 @@
+html {
+    background-color: #02161d;
+    height: 100%;
+}
+
+body {
+    height: 100%;
+    margin: 0;
+}
+
+#root {
+    margin-top: 30px;
+    margin-left: 20px;
+}
+
+#terminal pre, #terminal label, #terminal input {
+    font-family: monaco, Consolas, 'Lucida Console', monospace;
+    font-size: 13px;
+    color: #829395;
+    margin: 0;
+    padding: 0;
+    line-height: 18px;
+}
+
+#terminal > ul {
+    padding: 0;
+    margin: 0;
+}
+
+#terminal > ul, #terminal > ul > li {
+    margin-bottom: 2px;
+}
+
+#terminal li {
+    list-style: none;
+}
+
+#terminal input {
+    padding: 0;
+    border: none;
+    outline: none;
+    background-color: #02161d;
+}
+
+form {
+    /* height: 0px; */
+}
+
+
+#terminal > .info {
+    color: #eee8cc;
+}
+
+#terminal .hash {
+    color: #2fa198;
+}
+
+#terminal .name {
+    color: #2fa198;
+}
+
+#terminal .ip {
+    color: #85981c;
+}
+
+#terminal .location {
+    color: #b4881d;
+}
+
+#terminal .prompt {
+    color: #d93435;
+}
