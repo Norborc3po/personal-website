@@ -180,7 +180,7 @@ const generateOutput = input => {
 
 const generateInitialInfo = () => {
     return [
-        'Welcome to the internet!',
+        'Welcome to the Internet!',
         'Type \'help\' command to show the help menu'
     ];
 };
