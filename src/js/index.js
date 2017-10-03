@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import './analytics';
 import 'normalize.css';
+import 'animate.css';
 import '../css/main.css';
 
 const 
@@ -9,7 +10,8 @@ const
     CMD_WHOAMI = 'whoami',
     CMD_GITHUB = 'github',
     CMD_LINKEDIN = 'linkedin',
-    CMD_CLEAR = 'clear';
+    CMD_CLEAR = 'clear',
+    CMD_OOPS = 'oops';
 
 class Terminal extends Component {
     constructor (props) {
@@ -118,6 +120,10 @@ class Terminal extends Component {
 
     navigateHistoryUp() {
         const { history, historyIndex } = this.state;
+
+        if (history.length === 0) {
+            return;
+        }
         
         let newIndex;
         if (historyIndex === -1) {
@@ -135,17 +141,13 @@ class Terminal extends Component {
     navigateHistoryDown() {
         const { history, historyIndex } = this.state;
 
-        let newIndex;
-        if (historyIndex === -1) {
-            return;
-        } else {
-            newIndex = Math.min(history.length - 1, historyIndex + 1);
+        if (historyIndex !== -1) {
+            const newIndex = Math.min(history.length - 1, historyIndex + 1);
+            this.setState({
+                input: history[newIndex],
+                historyIndex: newIndex
+            });
         }
-
-        this.setState({
-            input: history[newIndex],
-            historyIndex: newIndex
-        });
     }
 };
 
@@ -173,6 +175,8 @@ const generateOutput = input => {
             return generatePersonalInfo();
         case CMD_CLEAR:
             return [];
+        case CMD_OOPS:
+            return generateOops();
         default:
             return [`Command not found: ${command}`];
     }
@@ -193,6 +197,7 @@ const generateHelp = () => {
         `   ${CMD_GITHUB}         Go to my Github page`,
         `   ${CMD_LINKEDIN}       Go to my LinkedIn page`,
         `   ${CMD_CLEAR}          Clear terminal output`,
+        `   ${CMD_OOPS}           Oops`,
         ` `
     ];
 };
@@ -219,6 +224,13 @@ const generateLinkedIn = () => {
     ];
 };
 
+const generateOops = () => {
+    setInterval(modifyRandomElement.bind(this, effects.wobble), 100);
+    setInterval(modifyRandomElement.bind(this, effects.hinge), 500);
+    setInterval(modifyRandomElement.bind(this, effects.comic), 5000);
+    return ['Did I do that?'];
+};
+
 ReactDOM.render(
     <Terminal/>,
     document.getElementById('root')
@@ -227,3 +239,61 @@ ReactDOM.render(
 document.body.addEventListener("click", () => {
     document.querySelector('#terminal input').focus()
 });
+
+const getRand = (min, max) => {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max + 1 - min)) + min;
+};
+
+const splitIntoWords = elem => {
+    let items = elem.innerText
+        .split(' ')
+        .map(i => [' ', i]);
+    
+    return []
+        .concat(...items)
+        .slice(1)
+        .filter(i => i !== '')
+        .map(createPre);
+};
+
+const splitIntoLetters = elem => {
+    return elem.innerText
+        .split('')
+        .filter(i => i !== '')
+        .map(createPre);
+};
+
+const createPre = text => {
+    const elem = document.createElement('pre');
+    elem.innerText = text;
+    return elem;
+};
+
+const effects = {
+    comic: [splitIntoWords, item => {
+        item.innerText = 'Comic Sans is ♥ ';
+        item.className += 'comic-font';
+    }],
+    hinge: [splitIntoWords, item => item.className += 'animated hinge'],
+    wobble: [splitIntoWords, item => item.className += 'animated wobble']
+};
+
+const modifyRandomElement = effect => {
+    const [ splitFunc, applyEffect ] = effect;
+    
+    const elems = Array.from(document.querySelectorAll('pre:not(.hinge)'))
+        .filter(elem => elem.innerText !== ' ');
+
+    if (elems.length === 0) {
+        return;
+    }
+    
+    const elem = elems[getRand(0, elems.length - 1)];
+    const items = splitFunc(elem);
+
+    elem.replaceWith(...items);
+    const eligibleItems = items.filter(item => item.innerText !== ' ');
+    applyEffect(eligibleItems[getRand(0, eligibleItems.length - 1)]);
+};

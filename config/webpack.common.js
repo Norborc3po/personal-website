@@ -1,6 +1,5 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 module.exports = {
     entry: './src/js/index.js',
@@ -37,10 +36,6 @@ module.exports = {
         filename: 'index.js'
     },
     plugins: [
-        new CleanWebpackPlugin(
-            ['../dist'],
-            { allowExternal: true }
-        ),
         new HtmlWebpackPlugin({
             favicon: './src/img/favicon.1.ico',
             filename: 'index.html',

@@ -13,7 +13,9 @@ body {
     margin-left: 20px;
 }
 
-#terminal pre, #terminal label, #terminal input {
+#terminal pre,
+#terminal label,
+#terminal input {
     font-family: monaco, Consolas, 'Lucida Console', monospace;
     font-size: 13px;
     color: #829395;
@@ -22,12 +24,17 @@ body {
     line-height: 18px;
 }
 
-#terminal > ul {
+#terminal pre {
+    display: inline-block;
+}
+
+#terminal>ul {
     padding: 0;
     margin: 0;
 }
 
-#terminal > ul, #terminal > ul > li {
+#terminal>ul,
+#terminal>ul>li {
     margin-bottom: 2px;
 }
 
@@ -42,18 +49,13 @@ body {
     background-color: #02161d;
 }
 
-form {
-    /* height: 0px; */
-}
-
 #dancing-jesus {
     position: fixed;
     top: 20px;
     right: 40px;
 }
 
-
-#terminal > .info {
+#terminal>.info {
     color: #eee8cc;
 }
 
@@ -75,4 +77,41 @@ form {
 
 #terminal .prompt {
     color: #d93435;
+}
+
+.comic-font {
+    font-family: 'Comic Sans MS' !important;
+    font-size: 15px !important;
+}
+
+.anim-grow {
+    animation-name: grow;
+    animation-direction: alternate;
+    animation-duration: 0.25s;
+    animation-iteration-count: infinite;
+}
+
+.anim-rotate {
+    animation-name: rotate;
+    animation-direction: alternate;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+}
+
+@keyframes grow {
+    from {
+        font-size: 100%
+    }
+    to {
+        font-size: 300%;
+    }
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
 }
