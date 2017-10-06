@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import './analytics';
 import 'normalize.css';
 import 'animate.css';
-import '../css/main.css';
+import '../css/main.styl';
 
 const 
     CMD_HELP = 'help',
@@ -231,15 +231,6 @@ const generateOops = () => {
     return ['Did I do that?'];
 };
 
-ReactDOM.render(
-    <Terminal/>,
-    document.getElementById('root')
-);
-
-document.body.addEventListener("click", () => {
-    document.querySelector('#terminal input').focus()
-});
-
 const getRand = (min, max) => {
     min = Math.ceil(min);
     max = Math.floor(max);
@@ -255,29 +246,30 @@ const splitIntoWords = elem => {
         .concat(...items)
         .slice(1)
         .filter(i => i !== '')
-        .map(createPre);
+        .map(item => createPre(item, elem.className));
 };
 
 const splitIntoLetters = elem => {
     return elem.innerText
         .split('')
         .filter(i => i !== '')
-        .map(createPre);
+        .map(letter => createPre(letter, elem.className));
 };
 
-const createPre = text => {
+const createPre = (text, className) => {
     const elem = document.createElement('pre');
     elem.innerText = text;
+    elem.className = className;
     return elem;
 };
 
 const effects = {
     comic: [splitIntoWords, item => {
-        item.innerText = 'Comic Sans is ♥ ';
-        item.className += 'comic-font';
+        item.innerText = 'Comic Sans is ♥';
+        item.className += ' comic-font';
     }],
-    hinge: [splitIntoWords, item => item.className += 'animated hinge'],
-    wobble: [splitIntoWords, item => item.className += 'animated wobble']
+    hinge: [splitIntoWords, item => item.className += ' animated hinge'],
+    wobble: [splitIntoWords, item => item.className += ' animated wobble']
 };
 
 const modifyRandomElement = effect => {
@@ -297,3 +289,12 @@ const modifyRandomElement = effect => {
     const eligibleItems = items.filter(item => item.innerText !== ' ');
     applyEffect(eligibleItems[getRand(0, eligibleItems.length - 1)]);
 };
+
+ReactDOM.render(
+    <Terminal/>,
+    document.getElementById('root')
+);
+
+document.body.addEventListener("click", () => {
+    document.querySelector('#terminal input').focus()
+});
