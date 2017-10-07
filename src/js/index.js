@@ -204,9 +204,14 @@ const generateHelp = () => {
 
 const generatePersonalInfo = () => {
     return [
-        'Hi! My name is Hugo Cárdenas.',
-        'I am a software engineer living in Helsinki, Finland.',
-        'I love to write code.'
+        '',
+        '   Hi! My name is Hugo Cárdenas.',
+        '   I am a software engineer living in Helsinki, Finland.',
+        '   I love to write code.',
+        '',
+        '   While previously I\'ve been more focused on backend,',
+        '   nowadays I\'m really excited about the whole stack and all things JS.',
+        '',
     ];
 };
 
