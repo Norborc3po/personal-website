@@ -281,7 +281,8 @@ const modifyRandomElement = effect => {
     const [splitFunc, applyEffect] = effect;
 
     const elems = Array.from(document.querySelectorAll('pre:not(.hinge)'))
-        .filter(elem => elem.innerText !== ' ');
+        // Select only elements with at least 1 character which is not space or line break
+        .filter(elem => elem.innerText.replace(/[\s\r]/, '') !== '');
 
     if (elems.length === 0) {
         return;
