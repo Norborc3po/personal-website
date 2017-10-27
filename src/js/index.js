@@ -17,11 +17,11 @@ class Terminal extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            history: [],
-            historyIndex: -1,
             input: '',
             lines: generateInitialInfo()
         };
+        this.history = [];
+        this.historyIndex = -1;
         this.keysPressed = [];
     }
 
@@ -60,10 +60,8 @@ class Terminal extends Component {
     }
 
     onInputChange(event) {
-        this.setState({
-            input: event.target.value,
-            historyIndex: -1
-        });
+        this.historyIndex = -1;
+        this.setState({ input: event.target.value });
     }
 
     onKeyPress(event) {
@@ -79,10 +77,10 @@ class Terminal extends Component {
 
         const oldLines = command === CMD_CLEAR ? [] : this.state.lines;
 
+        this.history = [...this.history, input].filter(i => i !== '');
+        this.historyIndex = -1;
         this.setState({
             input: '',
-            history: [...this.state.history, input].filter(i => i !== ''),
-            historyIndex: -1,
             lines: [
                 ...oldLines,
                 '> ' + input,
@@ -109,9 +107,9 @@ class Terminal extends Component {
     }
 
     processInterrupt() {
+        this.historyIndex = -1;
         this.setState({
             input: '',
-            historyIndex: -1,
             lines: [
                 ...this.state.lines,
                 '> ' + this.state.input
@@ -124,7 +122,7 @@ class Terminal extends Component {
     }
 
     navigateHistoryUp() {
-        const { history, historyIndex } = this.state;
+        const { history, historyIndex } = this;
 
         if (history.length === 0) {
             return;
@@ -137,21 +135,17 @@ class Terminal extends Component {
             newIndex = Math.max(0, historyIndex - 1);
         }
 
-        this.setState({
-            input: history[newIndex],
-            historyIndex: newIndex
-        });
+        this.historyIndex = newIndex;
+        this.setState({ input: history[newIndex] });
     }
 
     navigateHistoryDown() {
-        const { history, historyIndex } = this.state;
+        const { history, historyIndex } = this;
 
         if (historyIndex !== -1) {
             const newIndex = Math.min(history.length - 1, historyIndex + 1);
-            this.setState({
-                input: history[newIndex],
-                historyIndex: newIndex
-            });
+            this.historyIndex = newIndex;
+            this.setState({ input: history[newIndex] });
         }
     }
 };
