@@ -43,6 +43,7 @@
     "animate.css": "^3.5.2",
     "normalize.css": "^7.0.0",
     "react": "^16.0.0",
-    "react-dom": "^16.0.0"
+    "react-dom": "^16.0.0",
+    "react-linkifier": "^3.1.1"
   }
 }

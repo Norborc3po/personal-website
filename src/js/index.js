@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+import { linkifier } from 'react-linkifier';
 import './analytics';
 import 'normalize.css';
 import 'animate.css';
@@ -32,8 +33,8 @@ class Terminal extends Component {
             <ul>
                 {lines.map(line => <li>
                     {line.substring(0, 2) === '> ' ? 
-                        <pre><span className="prompt">> </span>{line.substring(2)}</pre> : 
-                        <pre>{line}</pre>}
+                        <pre><span className="prompt">> </span>{linkify(line.substring(2))}</pre> : 
+                        <pre>{linkify(line)}</pre>}
                 </li>)}
             </ul>
             <form onSubmit={this.onSubmit}>      
@@ -304,6 +305,8 @@ const setPromptInView = () => {
         window.scrollTo(0, document.body.scrollHeight);
     }
 };
+
+const linkify = text => linkifier(text, {target: '_blank'});
 
 ReactDOM.render(
     <Terminal/>,
