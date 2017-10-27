@@ -5,7 +5,7 @@ import 'normalize.css';
 import 'animate.css';
 import '../css/main.styl';
 
-const 
+const
     CMD_HELP = 'help',
     CMD_WHOAMI = 'whoami',
     CMD_GITHUB = 'github',
@@ -14,7 +14,7 @@ const
     CMD_OOPS = 'oops';
 
 class Terminal extends Component {
-    constructor (props) {
+    constructor(props) {
         super(props);
         this.state = {
             history: [],
@@ -51,11 +51,15 @@ class Terminal extends Component {
         </div>;
     }
 
+    componentDidUpdate() {
+        setPromptInView();
+    }
+
     onSubmit(event) {
         event.preventDefault();
     }
 
-    onInputChange(event) {
+    onInputChange(event) {
         this.setState({
             input: event.target.value,
             historyIndex: -1
@@ -80,14 +84,15 @@ class Terminal extends Component {
             history: [...this.state.history, input].filter(i => i !== ''),
             historyIndex: -1,
             lines: [
-                ...oldLines, 
-                '> ' + input, 
+                ...oldLines,
+                '> ' + input,
                 ...newLines
             ]
         });
     }
 
     onKeyDown(event) {
+        setPromptInView();
         this.keysPressed[event.keyCode] = true;
         // Ctrl + c
         if (this.keysPressed[17] && this.keysPressed[67]) {
@@ -96,9 +101,9 @@ class Terminal extends Component {
         // Up arrow
         else if (event.keyCode === 38) {
             this.navigateHistoryUp();
-        } 
+        }
         // Down arrow
-        else if (event.keyCode === 40){
+        else if (event.keyCode === 40) {
             this.navigateHistoryDown();
         }
     }
@@ -108,7 +113,7 @@ class Terminal extends Component {
             input: '',
             historyIndex: -1,
             lines: [
-                ...this.state.lines, 
+                ...this.state.lines,
                 '> ' + this.state.input
             ]
         });
@@ -124,7 +129,7 @@ class Terminal extends Component {
         if (history.length === 0) {
             return;
         }
-        
+
         let newIndex;
         if (historyIndex === -1) {
             newIndex = history.length - 1;
@@ -246,7 +251,7 @@ const splitIntoWords = elem => {
     let items = elem.innerText
         .split(' ')
         .map(i => [' ', i]);
-    
+
     return []
         .concat(...items)
         .slice(1)
@@ -278,21 +283,32 @@ const effects = {
 };
 
 const modifyRandomElement = effect => {
-    const [ splitFunc, applyEffect ] = effect;
-    
+    const [splitFunc, applyEffect] = effect;
+
     const elems = Array.from(document.querySelectorAll('pre:not(.hinge)'))
         .filter(elem => elem.innerText !== ' ');
 
     if (elems.length === 0) {
         return;
     }
-    
+
     const elem = elems[getRand(0, elems.length - 1)];
     const items = splitFunc(elem);
 
     elem.replaceWith(...items);
     const eligibleItems = items.filter(item => item.innerText !== ' ');
     applyEffect(eligibleItems[getRand(0, eligibleItems.length - 1)]);
+};
+
+const setPromptInView = () => {
+    const prompt = document.querySelector('#terminal > form');
+    const { height, top } = prompt.getBoundingClientRect();
+    const windowHeight = window.innerHeight;
+
+    // If prompt not fully in view, then scroll to bottom
+    if (height + top > windowHeight) {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
 };
 
 ReactDOM.render(
