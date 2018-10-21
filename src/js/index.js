@@ -184,7 +184,6 @@ const generateOutput = input => {
 
 const generateInitialInfo = () => {
     return [
-        'Welcome to the Internet™!',
         'Type \'help\' command to show the help menu'
     ];
 };
@@ -206,11 +205,10 @@ const generatePersonalInfo = () => {
     return [
         '',
         '   Hi! My name is Hugo Cárdenas.',
-        '   I am a software engineer living in Helsinki, Finland.',
-        '   I love to write code.',
+        '   I am a Spanish software engineer living in Helsinki, Finland.',
         '',
         '   While previously I\'ve been more focused on backend,',
-        '   nowadays I\'m really excited about the whole stack and all things JS.',
+        '   nowadays I\'m mostly excited about building stuff with JS, React & React Native.',
         '',
     ];
 };
