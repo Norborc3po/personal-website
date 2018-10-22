@@ -216,14 +216,14 @@ const generatePersonalInfo = () => {
 const generateGithub = () => {
     window.open('https://github.com/hugo-cardenas');
     return [
-        'This is my Github page: https://github.com/hugo-cardenas'
+        'https://github.com/hugo-cardenas'
     ];
 };
 
 const generateLinkedIn = () => {
     window.open(' https://linkedin.com/in/hugocardenas/?locale=en_US');
     return [
-        'This is my LinkedIn page: https://linkedin.com/in/hugocardenas/?locale=en_US'
+        'https://linkedin.com/in/hugocardenas/?locale=en_US'
     ];
 };
 
