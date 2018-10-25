@@ -9,6 +9,7 @@ import '../css/main.styl';
 const
     CMD_HELP = 'help',
     CMD_WHOAMI = 'whoami',
+    CMD_PROJECTS = 'projects',
     CMD_GITHUB = 'github',
     CMD_LINKEDIN = 'linkedin',
     CMD_CLEAR = 'clear',
@@ -167,12 +168,14 @@ const generateOutput = input => {
             return [];
         case CMD_HELP:
             return generateHelp();
+        case CMD_WHOAMI:
+            return generatePersonalInfo();
+        case CMD_PROJECTS:
+            return generateProjects();
         case CMD_GITHUB:
             return generateGithub();
         case CMD_LINKEDIN:
             return generateLinkedIn();
-        case CMD_WHOAMI:
-            return generatePersonalInfo();
         case CMD_CLEAR:
             return [];
         case CMD_OOPS:
@@ -193,6 +196,7 @@ const generateHelp = () => {
         ` `,
         `   ${CMD_HELP}           Show help menu`,
         `   ${CMD_WHOAMI}         Show personal info`,
+        `   ${CMD_PROJECTS}       Show some of my projects`,
         `   ${CMD_GITHUB}         Go to my Github page`,
         `   ${CMD_LINKEDIN}       Go to my LinkedIn page`,
         `   ${CMD_CLEAR}          Clear terminal output`,
@@ -209,6 +213,21 @@ const generatePersonalInfo = () => {
         '',
         '   While previously I\'ve been more focused on backend,',
         '   nowadays I\'m mostly excited about building stuff with JS, React & React Native.',
+        '',
+    ];
+};
+
+const generateProjects = () => {
+    return [
+        '',
+        '   Lickit - a desktop app for music study made with Electron',
+        '   https://github.com/hugo-cardenas/lickit',
+        '',
+        '   IMDB movie stats',
+        '   https://imdb-movie-stats.now.sh',
+        '',
+        '   Finnish tongue twisters',
+        '   https://finnishtonguetwisters.com',
         '',
     ];
 };
