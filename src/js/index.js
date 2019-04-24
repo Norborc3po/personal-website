@@ -41,7 +41,8 @@ class Terminal extends Component {
             <form onSubmit={this.onSubmit}>      
                 <label className="prompt">> </label>
                 <input 
-                    autoFocus 
+                    autoFocus
+                    className="cli-input"
                     type="text" 
                     value={input} 
                     onChange={this.onInputChange.bind(this)}
@@ -240,7 +241,7 @@ const generateGithub = () => {
 };
 
 const generateLinkedIn = () => {
-    window.open(' https://linkedin.com/in/hugocardenas/?locale=en_US');
+    window.open('https://linkedin.com/in/hugocardenas/?locale=en_US');
     return [
         'https://linkedin.com/in/hugocardenas/?locale=en_US'
     ];
