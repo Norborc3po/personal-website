@@ -1,10 +1,11 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import ReactDOM from 'react-dom';
 import { linkifier } from 'react-linkifier';
 import './analytics';
 import 'normalize.css';
 import 'animate.css';
 import '../css/main.styl';
+import img from '../img/phone.png';
 
 const
     CMD_HELP = 'help',
@@ -15,44 +16,58 @@ const
     CMD_CLEAR = 'clear',
     CMD_OOPS = 'oops';
 
+const
+    ENTRY_LINES = 'entry-lines',
+    ENTRY_PROJECTS = 'entry-projects';
+
 class Terminal extends Component {
     constructor(props) {
         super(props);
         this.state = {
             input: '',
-            lines: generateInitialInfo()
+            // entries: generateInitialEntries()
+            entries: [generateProjects()]
         };
         this.history = [];
         this.historyIndex = -1;
         this.keysPressed = [];
+        this.renderEntry = this.renderEntry.bind(this);
     }
 
     render() {
-        const { input, lines } = this.state;
+        const { input, entries } = this.state;
 
         return <div id="terminal">
-            <ul>
-                {lines.map(line => <li>
-                    {line.substring(0, 2) === '> ' ? 
-                        <pre><span className="prompt">> </span>{linkify(line.substring(2))}</pre> : 
-                        <pre>{linkify(line)}</pre>}
-                </li>)}
-            </ul>
-            <form onSubmit={this.onSubmit}>      
+            <div>
+                {entries.map(this.renderEntry)}
+            </div>
+            <form className="input-form" onSubmit={this.onSubmit}>
                 <label className="prompt">> </label>
-                <input 
+                <input
                     autoFocus
                     className="cli-input"
-                    type="text" 
-                    value={input} 
+                    type="text"
+                    value={input}
                     onChange={this.onInputChange.bind(this)}
                     onKeyPress={this.onKeyPress.bind(this)}
                     onKeyDown={this.onKeyDown.bind(this)}
                     onKeyUp={this.onKeyUp.bind(this)}
-                />      
+                />
             </form>
         </div>;
     }
+
+    renderEntry(entry) {
+        switch (entry.type) {
+            case ENTRY_PROJECTS:
+                return renderProjects();
+            case ENTRY_LINES:
+            default:
+                return entry.lines.map(renderLine);
+        }
+    }
+
+
 
     componentDidUpdate() {
         setPromptInView();
@@ -76,19 +91,19 @@ class Terminal extends Component {
     processInput() {
         const input = this.state.input.trim();
         const command = getCommand(input);
-        const newLines = generateOutput(input);
+        const newEntry = generateOutput(input);
 
-        const oldLines = command === CMD_CLEAR ? [] : this.state.lines;
+        const oldEntries = command === CMD_CLEAR ? [] : this.state.entries;
 
         this.history = [...this.history, input].filter(i => i !== '');
         this.historyIndex = -1;
         this.setState({
             input: '',
-            lines: [
-                ...oldLines,
-                '> ' + input,
-                ...newLines
-            ]
+            entries: [
+                ...oldEntries,
+                command !== CMD_CLEAR ? { type: ENTRY_LINES, lines: ['> ' + input] } : null,
+                newEntry
+            ].filter(entry => entry)
         });
     }
 
@@ -113,9 +128,9 @@ class Terminal extends Component {
         this.historyIndex = -1;
         this.setState({
             input: '',
-            lines: [
-                ...this.state.lines,
-                '> ' + this.state.input
+            entries: [
+                ...this.state.entries,
+                { type: ENTRY_LINES, lines: ['> ' + this.state.input] }
             ]
         });
     }
@@ -166,7 +181,7 @@ const generateOutput = input => {
     const args = input.split(' ').slice(1);
     switch (command) {
         case undefined:
-            return [];
+            return null;
         case CMD_HELP:
             return generateHelp();
         case CMD_WHOAMI:
@@ -178,48 +193,58 @@ const generateOutput = input => {
         case CMD_LINKEDIN:
             return generateLinkedIn();
         case CMD_CLEAR:
-            return [];
+            return null;
         case CMD_OOPS:
             return generateOops();
         default:
-            return [`Command not found: ${command}`];
+            return { type: ENTRY_LINES, lines: [`Command not found: ${command}`] };
     }
 };
 
-const generateInitialInfo = () => {
-    return [
-        'Type \'help\' command to show the help menu'
-    ];
+const generateInitialEntries = () => {
+    return [{
+        type: ENTRY_LINES, lines: [
+            'Type \'help\' command to show the help menu'
+        ]
+    }];
 };
 
 const generateHelp = () => {
-    return [
-        ` `,
-        `   ${CMD_HELP}           Show help menu`,
-        `   ${CMD_WHOAMI}         Show personal info`,
-        `   ${CMD_PROJECTS}       Show some of my projects`,
-        `   ${CMD_GITHUB}         Go to my Github page`,
-        `   ${CMD_LINKEDIN}       Go to my LinkedIn page`,
-        `   ${CMD_CLEAR}          Clear terminal output`,
-        `   ${CMD_OOPS}           Oops`,
-        ` `
-    ];
+    return {
+        type: ENTRY_LINES, lines: [
+            ` `,
+            `   ${CMD_HELP}           Show help menu`,
+            `   ${CMD_WHOAMI}         Show personal info`,
+            `   ${CMD_PROJECTS}       Show some of my projects`,
+            `   ${CMD_GITHUB}         Go to my Github page`,
+            `   ${CMD_LINKEDIN}       Go to my LinkedIn page`,
+            `   ${CMD_CLEAR}          Clear terminal output`,
+            `   ${CMD_OOPS}           Oops`,
+            ` `
+        ]
+    };
 };
 
 const generatePersonalInfo = () => {
-    return [
-        '',
-        '   Hi! My name is Hugo Cárdenas.',
-        '   I am a Spanish software engineer living in Helsinki, Finland.',
-        '',
-        '   While previously I\'ve been more focused on backend,',
-        '   nowadays I\'m mostly excited about building stuff with JS, React & React Native.',
-        '',
-    ];
+    return {
+        type: ENTRY_LINES, lines: [
+            '',
+            '   Hi! My name is Hugo Cárdenas.',
+            '   I am a Spanish software engineer living in Helsinki, Finland.',
+            '',
+            '   While previously I\'ve been more focused on backend,',
+            '   nowadays I\'m mostly excited about building stuff with JS, React & React Native.',
+            '',
+        ]
+    };
 };
 
 const generateProjects = () => {
-    return [
+    return { type: ENTRY_PROJECTS };
+};
+
+const renderProjects = () => {
+    const a = [
         '',
         '   Lickit - a desktop app for music study made with Electron',
         '   https://github.com/hugo-cardenas/lickit',
@@ -231,27 +256,74 @@ const generateProjects = () => {
         '   https://finnishtonguetwisters.com',
         '',
     ];
-};
+    return (
+        <Fragment>
+            {renderMobileBlock(img, [
+                'Frinkiac - an iOS app built with React Native',
+                'on top of http://frinkiac.com',
+                'https://github.com/hugo-cardenas/lickit'
+            ])}
+            {renderMobileBlock(img, [
+                'Amino White Label app',
+                '',
+                'I worked on building the White Label application customizable',
+                'for multiple TV/cloud operators'
+            ])}
+        </Fragment>       
+    );
+}
+
+const renderMobileBlock = (img, lines) => (
+    <div style={{
+        display: 'flex',
+        // backgroundColor: 'red',
+        alignItems: 'center'
+    }}>
+        <img src={img} style={{
+            marginTop: '40px',
+            marginBottom: '40px',
+            marginRight: '20px',
+            width: '250px',
+        }} />
+        <div>
+            {lines.map(renderLine)}            
+        </div>
+    </div>
+);
+
+const renderLine = line => {
+    return (
+        <div className="line">
+            {line.substring(0, 2) === '> ' ?
+                <pre><span className="prompt">> </span>{linkify(line.substring(2))}</pre> :
+                <pre>{linkify(line)}</pre>}
+        </div>
+    );
+}
 
 const generateGithub = () => {
     window.open('https://github.com/hugo-cardenas');
-    return [
-        'https://github.com/hugo-cardenas'
-    ];
+    return {
+        type: ENTRY_LINES, lines: [
+            'https://github.com/hugo-cardenas'
+        ]
+    };
 };
 
 const generateLinkedIn = () => {
     window.open('https://linkedin.com/in/hugocardenas/?locale=en_US');
-    return [
-        'https://linkedin.com/in/hugocardenas/?locale=en_US'
-    ];
+    return {
+        type: ENTRY_LINES, lines: [
+            'https://linkedin.com/in/hugocardenas/?locale=en_US'
+        ]
+    };
 };
 
 const generateOops = () => {
     setInterval(modifyRandomElement.bind(this, effects.wobble), 100);
     setInterval(modifyRandomElement.bind(this, effects.hinge), 500);
     setInterval(modifyRandomElement.bind(this, effects.comic), 5000);
-    return ['Did I do that?'];
+    return { type: ENTRY_LINES, lines: ['Did I do that?'] };
 };
 
 const getRand = (min, max) => {
@@ -321,14 +393,18 @@ const setPromptInView = () => {
 
     // If prompt not fully in view, then scroll to bottom
     if (height + top > windowHeight) {
-        window.scrollTo(0, document.body.scrollHeight);
+        window.scrollTo({
+            left: 0,
+            top: document.body.scrollHeight,
+            behavior: 'smooth',
+        });
     }
 };
 
-const linkify = text => linkifier(text, {target: '_blank'});
+const linkify = text => linkifier(text, { target: '_blank' });
 
 ReactDOM.render(
-    <Terminal/>,
+    <Terminal />,
     document.getElementById('root')
 );
 
