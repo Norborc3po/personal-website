@@ -269,7 +269,7 @@ const renderProjects = () => {
                 'I worked on building the White Label application customizable',
                 'for multiple TV/cloud operators'
             ])}
-        </Fragment>       
+        </Fragment>
     );
 }
 
@@ -277,17 +277,20 @@ const renderMobileBlock = (img, lines) => (
     <div style={{
         display: 'flex',
         // backgroundColor: 'red',
-        alignItems: 'center'
+        flexWrap: 'wrap-reverse',
+        alignItems: 'center',
+        marginTop: '40px'
     }}>
         <img src={img} style={{
-            marginTop: '40px',
-            marginBottom: '40px',
+            // marginTop: '40px',
+            // marginBottom: '40px',
             marginRight: '20px',
             width: '250px',
         }} />
-        <div>
-            {lines.map(renderLine)}            
+        <div style={{ marginBottom: '20px'}}>
+            {lines.map(renderLine)}
         </div>
+
     </div>
 );
 
