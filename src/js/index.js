@@ -25,8 +25,9 @@ class Terminal extends Component {
         super(props);
         this.state = {
             input: '',
-            // entries: generateInitialEntries()
-            entries: [generateProjects()]
+            entries: generateInitialEntries()
+            //entries: [generateProjects()]
+            // entries: [generatePersonalInfo()]
         };
         this.history = [];
         this.historyIndex = -1;
@@ -67,10 +68,12 @@ class Terminal extends Component {
         }
     }
 
-
-
     componentDidUpdate() {
-        setPromptInView();
+        scrollPromptToBottom();
+    }
+
+    componentDidMount(){
+        document.body.addEventListener("keydown", this.onKeyDown.bind(this));
     }
 
     onSubmit(event) {
@@ -95,6 +98,22 @@ class Terminal extends Component {
 
         const oldEntries = command === CMD_CLEAR ? [] : this.state.entries;
 
+        if (command === CMD_CLEAR) {
+            scrollToTop();
+        } else {
+            // If all new lines' height under the last prompt are shorter than screen height, scroll the new prompt to bottom of screen
+            // If they are logner than screen height, scroll the last prompt to top of the csreen
+
+            // scrollPromptToBottom();
+
+
+            // Array.from(document.querySelectorAll('.line')).filter(function(e){
+            //     return e.innerText.substring(0, 2) === '> '
+            //   }).pop().scrollIntoView({ behavior: 'smooth' })
+        } 
+
+        
+
         this.history = [...this.history, input].filter(i => i !== '');
         this.historyIndex = -1;
         this.setState({
@@ -104,11 +123,20 @@ class Terminal extends Component {
                 command !== CMD_CLEAR ? { type: ENTRY_LINES, lines: ['> ' + input] } : null,
                 newEntry
             ].filter(entry => entry)
+        }, () => {
+            
         });
     }
 
     onKeyDown(event) {
-        setPromptInView();
+        // setPromptInView();
+        // window.scrollTo({ left: 0, top: scrollHeight, behavior: 'smooth' });
+
+        // TODO Scroll smoothly to prompt input
+
+        scrollPromptToBottom();
+        // document.querySelector('#terminal input').focus({ preventScroll: true });
+
         this.keysPressed[event.keyCode] = true;
         // Ctrl + c
         if (this.keysPressed[17] && this.keysPressed[67]) {
@@ -212,15 +240,15 @@ const generateInitialEntries = () => {
 const generateHelp = () => {
     return {
         type: ENTRY_LINES, lines: [
-            ` `,
-            `   ${CMD_HELP}           Show help menu`,
-            `   ${CMD_WHOAMI}         Show personal info`,
-            `   ${CMD_PROJECTS}       Show some of my projects`,
-            `   ${CMD_GITHUB}         Go to my Github page`,
-            `   ${CMD_LINKEDIN}       Go to my LinkedIn page`,
-            `   ${CMD_CLEAR}          Clear terminal output`,
-            `   ${CMD_OOPS}           Oops`,
-            ` `
+            ``,
+            `${CMD_HELP}           Show help menu`,
+            `${CMD_WHOAMI}         Show personal info`,
+            `${CMD_PROJECTS}       Show some of my projects`,
+            `${CMD_GITHUB}         Go to my Github page`,
+            `${CMD_LINKEDIN}       Go to my LinkedIn page`,
+            `${CMD_CLEAR}          Clear terminal output`,
+            `${CMD_OOPS}           Oops`,
+            ``
         ]
     };
 };
@@ -229,11 +257,11 @@ const generatePersonalInfo = () => {
     return {
         type: ENTRY_LINES, lines: [
             '',
-            '   Hi! My name is Hugo Cárdenas.',
-            '   I am a Spanish software engineer living in Helsinki, Finland.',
+            'Hi! My name is Hugo Cárdenas.',
+            'I am a Spanish software engineer living in Helsinki, Finland.',
             '',
-            '   While previously I\'ve been more focused on backend,',
-            '   nowadays I\'m mostly excited about building stuff with JS, React & React Native.',
+            'While previously I\'ve been more focused on backend,',
+            'nowadays I\'m mostly excited about building stuff with JS, React & React Native.',
             '',
         ]
     };
@@ -259,15 +287,21 @@ const renderProjects = () => {
     return (
         <Fragment>
             {renderMobileBlock(img, [
-                'Frinkiac - an iOS app built with React Native',
-                'on top of http://frinkiac.com',
-                'https://github.com/hugo-cardenas/lickit'
+                '',
+                'Frinkiac iOS app',
+                '',
+                'A personal project, an iOS app built with React Native on top of http://frinkiac.com',
+                ''
             ])}
             {renderMobileBlock(img, [
+                '',
+                ' --- ',
+                '',
                 'Amino White Label app',
                 '',
-                'I worked on building the White Label application customizable',
-                'for multiple TV/cloud operators'
+                'I worked for Amino Communications on building our White Label application (React Native) customizable',
+                'for multiple TV/cloud operators',
+                ''
             ])}
         </Fragment>
     );
@@ -279,15 +313,16 @@ const renderMobileBlock = (img, lines) => (
         // backgroundColor: 'red',
         flexWrap: 'wrap-reverse',
         alignItems: 'center',
-        marginTop: '40px'
+        // marginTop: '40px'
     }}>
         <img src={img} style={{
             // marginTop: '40px',
             // marginBottom: '40px',
+            // marginLeft: '25px',
             marginRight: '20px',
             width: '250px',
         }} />
-        <div style={{ marginBottom: '20px'}}>
+        <div style={{ /*marginBottom: '20px'*/ }}>
             {lines.map(renderLine)}
         </div>
 
@@ -295,11 +330,15 @@ const renderMobileBlock = (img, lines) => (
 );
 
 const renderLine = line => {
+    const isPrompt = line.substring(0, 2) === '> ';
     return (
-        <div className="line">
-            {line.substring(0, 2) === '> ' ?
+        <div className={`line ${isPrompt ? 'line-prompt' : 'line-normal'}`}>
+            {isPrompt ?
                 <pre><span className="prompt">> </span>{linkify(line.substring(2))}</pre> :
-                <pre>{linkify(line)}</pre>}
+                <pre>{
+                linkify(line)
+                }</pre>
+            }
         </div>
     );
 }
@@ -325,7 +364,7 @@ const generateLinkedIn = () => {
 const generateOops = () => {
     setInterval(modifyRandomElement.bind(this, effects.wobble), 100);
     setInterval(modifyRandomElement.bind(this, effects.hinge), 500);
-    setInterval(modifyRandomElement.bind(this, effects.comic), 5000);
+    // setInterval(modifyRandomElement.bind(this, effects.comic), 5000);
     return { type: ENTRY_LINES, lines: ['Did I do that?'] };
 };
 
@@ -389,20 +428,29 @@ const modifyRandomElement = effect => {
     applyEffect(eligibleItems[getRand(0, eligibleItems.length - 1)]);
 };
 
-const setPromptInView = () => {
+const scrollPromptToBottom = () => {
     const prompt = document.querySelector('#terminal > form');
     const { height, top } = prompt.getBoundingClientRect();
     const windowHeight = window.innerHeight;
 
     // If prompt not fully in view, then scroll to bottom
     if (height + top > windowHeight) {
-        window.scrollTo({
-            left: 0,
-            top: document.body.scrollHeight,
-            behavior: 'smooth',
-        });
+        // window.scrollTo({
+        //     left: 0,
+        //     top: document.body.scrollHeight,
+        //     behavior: 'smooth',
+        // });
+
+        prompt.scrollIntoView({ alignToTop: false, behavior: 'smooth' })
     }
 };
+
+const scrollToTop = () => {
+    window.scrollTo({
+        left: 0,
+        top: 0
+    });
+}
 
 const linkify = text => linkifier(text, { target: '_blank' });
 
@@ -412,5 +460,7 @@ ReactDOM.render(
 );
 
 document.body.addEventListener("click", () => {
-    document.querySelector('#terminal input').focus()
+    // document.querySelector('#terminal input').focus()
 });
+
+

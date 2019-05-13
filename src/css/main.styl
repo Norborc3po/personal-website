@@ -8,10 +8,12 @@ html
 
 body
     height: 100%
+    terminal-font()
 
 #root
     margin-top: 30px
     margin-left: 20px
+    margin-right: 20px
 
 terminal-font()
     color: text-color
@@ -30,6 +32,7 @@ comic-font()
         margin: 0
         padding: 0
         terminal-font()
+        white-space: pre-wrap;
     pre.comic-font
         comic-font()
     .cli-input
@@ -42,6 +45,11 @@ comic-font()
 
 .line
     margin-bottom: 2px
+    
+    terminal-font()
+
+.line-normal
+    // margin-left: 25px
 
 .input-form
-    margin-bottom: 20px    
+    padding-bottom: 20px    
