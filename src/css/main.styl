@@ -16,25 +16,18 @@ body
     margin-right: 20px
 
 terminal-font()
-    color: text-color
     font-family: monaco, Consolas, 'Lucida Console', monospace
     font-size: 13px
     line-height: 18px
 
-comic-font()
-    font-family: 'Comic Sans MS'
-    font-size: 15px
-
 #terminal
     pre
         display: inline-block
-    pre, label, input, a
+    pre, label, input, a, span, div
         margin: 0
         padding: 0
         terminal-font()
         white-space: pre-wrap;
-    pre.comic-font
-        comic-font()
     .cli-input
         padding: 0
         border: none
@@ -44,12 +37,31 @@ comic-font()
         color: prompt-color
 
 .line
-    margin-bottom: 2px
-    
     terminal-font()
+    color: text-color
+    margin-bottom: 2px    
 
 .line-normal
     // margin-left: 25px
 
+.mobile-block
+    display: flex
+    flex-wrap: wrap-reverse
+    align-items: center        
+    
+    img
+        margin-right: 20px
+        width: 250px
+    
+    .mobile-block-text
+        max-width: 400px
+    
+    .mobile-block-title
+        color: prompt-color
+        margin-bottom: 15px
+
 .input-form
-    padding-bottom: 20px    
+    padding-bottom: 20px
+
+    input
+        color: text-color
