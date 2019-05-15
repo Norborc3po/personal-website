@@ -1,6 +1,15 @@
-background-color = #02161d
+// background-color = #02161d
 text-color = #829395
 prompt-color = #d93435
+
+pre, label, input, a, span, div
+    margin: 0
+    padding: 0
+
+terminal-font()
+    font-family: monaco, Consolas, 'Lucida Console', monospace
+    font-size: 13px
+    line-height: 21px
 
 html
     background-color: background-color
@@ -10,51 +19,45 @@ body
     height: 100%
     terminal-font()
 
+a, pre, input
+    color: text-color
+
 #root
     margin-top: 30px
     margin-left: 20px
     margin-right: 20px
 
-terminal-font()
-    font-family: monaco, Consolas, 'Lucida Console', monospace
-    font-size: 13px
-    line-height: 18px
-
 #terminal
     pre
         display: inline-block
-    pre, label, input, a, span, div
-        margin: 0
-        padding: 0
-        terminal-font()
-        white-space: pre-wrap;
-    .cli-input
+        white-space: pre-wrap
+
+    pre, input
+        terminal-font()        
+
+.cli-input
         padding: 0
         border: none
         outline: none
         background: transparent
-    .prompt
-        color: prompt-color
+.prompt
+    color: prompt-color    
 
 .line
     terminal-font()
-    color: text-color
-    margin-bottom: 2px    
 
 .line-normal
     // margin-left: 25px
 
-.mobile-block
+div.mobile-block
     display: flex
     flex-wrap: wrap-reverse
-    align-items: center        
-    
-    img
-        margin-right: 20px
-        width: 250px
+    align-items: center
+    margin: 50px 0    
     
     .mobile-block-text
         max-width: 400px
+        margin-bottom: 25px
     
     .mobile-block-title
         color: prompt-color
@@ -63,5 +66,6 @@ terminal-font()
 .input-form
     padding-bottom: 20px
 
-    input
-        color: text-color
+.phone-image
+    margin-right: 30px
+    width: 250px

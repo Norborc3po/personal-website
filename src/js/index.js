@@ -6,6 +6,7 @@ import 'normalize.css';
 import 'animate.css';
 import '../css/main.styl';
 import img from '../img/phone.png';
+import PhoneImage from './PhoneImage/PhoneImage';
 
 const
   CMD_HELP = 'help',
@@ -36,6 +37,10 @@ class Terminal extends Component {
 
   render() {
     const { entries } = this.state;
+    return <div>
+      <PhoneImage />
+    </div>;
+
     return <div id="terminal">
       <div>
         {entries.map(this.renderEntry)}
@@ -288,7 +293,7 @@ const renderProjects = () => {
     {
       img,
       title: 'Amino White Label app',
-      description: 'I worked for Amino Communications on building our White Label application (React Native) customizable for multiple TV/cloud operators'
+      description: 'I worked for Amino Communications on building our White Label application, with React Native, customizable for multiple TV/cloud operators'
     }
   ]
   return (
@@ -300,7 +305,8 @@ const renderProjects = () => {
 
 const renderMobileBlock = (img, title, description) => (
   <div className="mobile-block">
-    <img src={img} />
+    <PhoneImage />
+    {/* <img src={img} /> */}
     <div className="mobile-block-text">
       <div className="mobile-block-title">{title}</div>
       <div>{renderLine(description)}</div>
